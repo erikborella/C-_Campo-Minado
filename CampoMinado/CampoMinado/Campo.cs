@@ -117,38 +117,27 @@ namespace CampoMinado
 
         private void AdicionaCelularAdjacentes(List<Celula> fila, Celula atual)
         {
-            if (EhPosicaoValida(atual.PosicaoI - 1, atual.PosicaoJ))
-                if (!this.celulas[atual.PosicaoI - 1, atual.PosicaoJ].EstaAberto)
-                {
-                    this.celulas[atual.PosicaoI - 1, atual.PosicaoJ].EstaAberto = true;
-                    fila.Add(this.celulas[atual.PosicaoI - 1, atual.PosicaoJ]);
-                }
 
-            if (EhPosicaoValida(atual.PosicaoI, atual.PosicaoJ - 1))
-                if (!this.celulas[atual.PosicaoI, atual.PosicaoJ - 1].EstaAberto)
+            for (int celulaI = -1; celulaI <= 1; celulaI++)
+            {
+                for (int celulaJ = -1; celulaJ <= 1; celulaJ++)
                 {
-                    this.celulas[atual.PosicaoI, atual.PosicaoJ - 1].EstaAberto = true;
-                    fila.Add(this.celulas[atual.PosicaoI, atual.PosicaoJ - 1]);
+                    if (EhPosicaoValida(atual.PosicaoI + celulaI, atual.PosicaoJ + celulaJ))
+                        if (!this.celulas[atual.PosicaoI + celulaI, atual.PosicaoJ + celulaJ].EstaAberto)
+                        {
+                            this.celulas[atual.PosicaoI + celulaI, atual.PosicaoJ + celulaJ].EstaAberto = true;
+                            fila.Add(this.celulas[atual.PosicaoI + celulaI, atual.PosicaoJ + celulaJ]);
+                        }
                 }
-
-            if (EhPosicaoValida(atual.PosicaoI, atual.PosicaoJ + 1))
-                if (!this.celulas[atual.PosicaoI, atual.PosicaoJ + 1].EstaAberto)
-                {
-                    this.celulas[atual.PosicaoI, atual.PosicaoJ + 1].EstaAberto = true;
-                    fila.Add(this.celulas[atual.PosicaoI, atual.PosicaoJ + 1]);
-                }
-
-            if (EhPosicaoValida(atual.PosicaoI + 1, atual.PosicaoJ))
-                if (!this.celulas[atual.PosicaoI + 1, atual.PosicaoJ].EstaAberto)
-                {
-                    this.celulas[atual.PosicaoI + 1, atual.PosicaoJ].EstaAberto = true;
-                    fila.Add(this.celulas[atual.PosicaoI + 1, atual.PosicaoJ]);
-                }
+            }
         }
 
         public bool AbrirEhBomba(int i, int j)
         {
             if (!EhPosicaoValida(i, j))
+                return false;
+
+            if (this.celulas[i, j].EstaMarcado)
                 return false;
 
             if (this.celulas[i, j].EstaAberto)
@@ -167,6 +156,13 @@ namespace CampoMinado
                 AbrirCasasVazias(i, j);
 
             return false;
+        }
+
+        public void Marcar(int i, int j)
+        {
+            if (EhPosicaoValida(i, j))
+                this.celulas[i, j].EstaMarcado = !this.celulas[i, j].EstaMarcado;
+
         }
 
         public bool DescobriuTodasAsBombas()

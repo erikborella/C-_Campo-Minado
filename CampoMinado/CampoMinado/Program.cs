@@ -29,12 +29,19 @@ namespace CampoMinado
 
                     Console.WriteLine(campo.ToStringComPosicoes());
 
-                    Console.Write("Digite as posicoes que voce deseja jogar, ex 2 6: ");
+                    Console.Write("Digite as posicoes que voce deseja jogar, coloque um M no final para marcar ");
+                    bool ehParaMarcar;
                     int i, j;
-                    LerPosicoesJogadas(out i, out j);
+                    LerPosicoesJogadas(out i, out j, out ehParaMarcar);
 
-                    naoExplodiuAinda = !campo.AbrirEhBomba(i-1, j-1);
-                    abriuTodasAsBombas = campo.DescobriuTodasAsBombas();
+
+                    if (ehParaMarcar)
+                        campo.Marcar(i-1, j-1);
+                    else
+                    {
+                        naoExplodiuAinda = !campo.AbrirEhBomba(i-1, j-1);
+                        abriuTodasAsBombas = campo.DescobriuTodasAsBombas();
+                    }
                 }
 
                 if (!naoExplodiuAinda)
@@ -59,7 +66,7 @@ namespace CampoMinado
 
                 if (inputSeparado.Length != 2)
                 {
-                    Console.WriteLine("Digite o tamanho no formato NxN, ex: 10x10");
+                    Console.WriteLine("Digite o tamanho no formato NxN");
                     continue;
                 }
 
@@ -100,18 +107,31 @@ namespace CampoMinado
             }
         }
 
-        private static void LerPosicoesJogadas(out int i, out int j)
+        private static void LerPosicoesJogadas(out int i, out int j, out bool ehParaMarcar)
         {
             while (true)
             {
                 string input = Console.ReadLine();
                 string[] inputSeparado = input.Split(" ");
 
-                if (inputSeparado.Length != 2)
+                if (inputSeparado.Length != 2 && inputSeparado.Length != 3)
                 {
-                    Console.WriteLine("Digite as posicoes que voce deseja jogar, ex 2 6");
+                    Console.WriteLine("Digite as posicoes que voce deseja jogar, ex 2 6, ou coloque um M no final para marcar");
                     continue;
                 }
+
+                if (inputSeparado.Length == 3)
+                {
+                    if (inputSeparado[2] == "M")
+                        ehParaMarcar = true;
+                    else
+                    {
+                        Console.WriteLine("Digite apenas M no final para marcar");
+                        continue;
+                    }
+                }
+                else
+                    ehParaMarcar = false;
 
                 try
                 {
@@ -121,7 +141,7 @@ namespace CampoMinado
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Digite as posicoes que voce deseja jogar, ex 2 6");
+                    Console.WriteLine("Digite as posicoes que voce deseja jogar, ex 2 6, ou coloque um M no final para marcar");
                     continue;
                 }
             }
